@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get/get.dart';
+import '../../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MySecureStorage {
@@ -30,8 +30,7 @@ class MySecureStorage {
     await _secureStorage.delete(key: isDark);
 
     try {
-      // Use GetX to navigate to the initial route (e.g. login/splash)
-      Get.offAllNamed('/');
+      navigatorKey.currentState?.pushNamedAndRemoveUntil('/', (route) => false);
     } catch (e) {
       log("Navigation error during logout: ${e.toString()}");
     }

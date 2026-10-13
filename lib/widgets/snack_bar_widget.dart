@@ -1,21 +1,18 @@
-import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
-import '../core/utils/app_colors.dart'; // change your import
+import '../core/utils/app_colors.dart';
+import 'message_widget.dart';
 
 class SnackBarService {
   static void show(String message) {
-    Get.snackbar(
-      message,
-      "",
-      snackPosition: SnackPosition.BOTTOM,
-      colorText: AppColors.white,
-      backgroundColor: AppColors.primaryColor,
-      titleText: null, // removes title area
-      messageText: Text(
+    final snackBar = SnackBar(
+      content: Text(
         message,
-        style: TextStyle(color: AppColors.white, fontFamily: 'Tajawal'),
+        style: const TextStyle(color: AppColors.white, fontFamily: 'Tajawal'),
       ),
+      backgroundColor: AppColors.primaryColor,
+      duration: const Duration(seconds: 4),
     );
+    MessageWidget.scaffoldMessengerKey.currentState?.showSnackBar(snackBar);
   }
 }

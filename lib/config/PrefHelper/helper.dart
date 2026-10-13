@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_project_structure/config/PrefHelper/prefs.dart';
-import 'package:get/get.dart';
 import '../../core/utils/app_strings.dart';
 
 class Helper {
   static Future<void> getDefaultLanguage() async {
+    final localization = FlutterLocalization.instance;
     if (Prefs.isContain(AppStrings.local)) {
       String savedLocale = Prefs.getString(AppStrings.local);
-      Locale locale = (savedLocale == AppStrings.enCountryCode)
-          ? const Locale('en', 'US')
-          : const Locale('ar', 'AR');
-      Get.updateLocale(locale);
+      String langCode = (savedLocale == AppStrings.enCountryCode) ? 'en' : 'ar';
+      localization.translate(langCode);
     } else {
       // Default to Arabic if no language is chosen
-      Locale locale = const Locale('ar', 'AR');
-      Get.updateLocale(locale);
+      localization.translate('ar');
       // Save Arabic as default
       await setDefaultLang(AppStrings.arCountryCode);
     }
+  }
+
+  static Future<void> setLanguage(String langCode) async {
+    final localization = FlutterLocalization.instance;
+    localization.translate(langCode);
+    String countryCode = (langCode == 'en') ? AppStrings.enCountryCode : AppStrings.arCountryCode;
+    await setDefaultLang(countryCode);
   }
 
   static setDefaultLang(String lang) async =>
@@ -35,12 +40,12 @@ class Helper {
 
   static String getCurrentLocal() {
     String local = AppStrings.enCountryCode;
-    final currentLocal = Get.locale;
+    final currentLocal = FlutterLocalization.instance.currentLocale;
 
     if (currentLocal != null && currentLocal.countryCode != null) {
       local = currentLocal.countryCode!;
     } else {
-      // Fallback to saved preference if Get.locale is null
+      // Fallback to saved preference
       if (Prefs.isContain(AppStrings.local)) {
         local = Prefs.getString(AppStrings.local);
       }

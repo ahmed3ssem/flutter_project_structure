@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_project_structure/core/utils/app_colors.dart';
-import 'package:get/get.dart';
+import '../core/utils/local_strings.dart';
 
 class ErrorWidgetItem extends StatelessWidget {
   final VoidCallback onTap;
@@ -38,7 +39,7 @@ class ErrorWidgetItem extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
-                  'somethingWentWrong'.tr,
+                  AppLocale.somethingWentWrong.getString(context),
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w700,
@@ -47,7 +48,7 @@ class ErrorWidgetItem extends StatelessWidget {
                 ),
               ),
               Text(
-                'pleaseTryAgain'.tr,
+                AppLocale.pleaseTryAgain.getString(context),
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 16.sp,
@@ -55,7 +56,7 @@ class ErrorWidgetItem extends StatelessWidget {
                 ),
               ),
               Container(
-                width: context.width * 0.55,
+                width: MediaQuery.sizeOf(context).width * 0.55,
                 height: 55.h,
                 margin: const EdgeInsets.symmetric(vertical: 15),
                 child: ElevatedButton(
@@ -69,7 +70,7 @@ class ErrorWidgetItem extends StatelessWidget {
                   ),
                   onPressed: onTap,
                   child: Text(
-                    'reloadScreen'.tr,
+                    AppLocale.reloadScreen.getString(context),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Colors.white,

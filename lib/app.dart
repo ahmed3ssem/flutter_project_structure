@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
-import 'config/PrefHelper/helper.dart';
 import 'config/routes/app_routes.dart';
 import 'config/theme/dark_theme.dart';
 import 'config/theme/light_theme.dart';
 import 'config/theme/theme_cubit.dart';
 import 'core/utils/app_strings.dart';
-import 'core/utils/local_strings.dart';
+import 'main.dart';
 import 'widgets/message_widget.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final FlutterLocalization _localization = FlutterLocalization.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _localization.onTranslatedLanguage = (locale) {
+      if (mounted) {
+        setState(() {});
+      }
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +46,10 @@ class MyApp extends StatelessWidget {
               ).copyWith(
                 textScaler: const TextScaler.linear(1.0),
               ),
-              child: GetMaterialApp(
-                translations: LocalStrings(),
-                locale: Helper.getCurrentLocal() == AppStrings.arCountryCode
-                    ? const Locale('ar', 'AR')
-                    : const Locale('en', 'US'),
-                fallbackLocale: const Locale('ar', 'AR'),
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('ar', 'AR'),
-                  Locale('en', 'US'),
-                ],
+              child: MaterialApp(
+                navigatorKey: navigatorKey,
+                supportedLocales: _localization.supportedLocales,
+                localizationsDelegates: _localization.localizationsDelegates,
 
                 theme: LightTheme.theme,
                 darkTheme: DarkTheme.theme,

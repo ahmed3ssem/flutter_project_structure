@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import '../config/theme/styles.dart';
 import '../core/utils/app_colors.dart';
+import '../core/utils/local_strings.dart';
 
 class SkipWidget extends StatelessWidget {
   final VoidCallback onTap;
@@ -16,7 +17,7 @@ class SkipWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Text(
-            'skip'.tr,
+            AppLocale.skip.getString(context),
             style: TextStyles.textMedium5.copyWith(
               color: AppColors.primaryColor,
             ),

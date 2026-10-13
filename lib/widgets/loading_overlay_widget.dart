@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:flutter_project_structure/config/theme/styles.dart';
+import '../core/utils/local_strings.dart';
 
 class LoadingOverlayWidget extends StatelessWidget {
   const LoadingOverlayWidget({super.key});
@@ -28,20 +29,20 @@ class LoadingOverlayWidget extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(
+                const CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                   strokeWidth: 3.0,
                 ),
                 SizedBox(height: 20.h),
                 Text(
-                  'loading'.tr,
+                  AppLocale.loading.getString(context),
                   style: TextStyles.textMedium.copyWith(
                     color: Colors.grey[800],
                   ),
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  'pleaseWait'.tr,
+                  AppLocale.pleaseWait.getString(context),
                   style: TextStyles.textMedium4.copyWith(
                     color: Colors.grey[600],
                   ),

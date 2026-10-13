@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../core/utils/local_strings.dart';
 
 class Routes {
   static const String initialRoutes = '/';
@@ -10,7 +13,11 @@ class AppRoutes {
       case Routes.initialRoutes:
         return MaterialPageRoute(
           builder: (context) {
-            return const SizedBox();
+            return Scaffold(
+              body: Center(
+                child: Text(LocalStrings.noData , style: TextStyle(fontSize: 16.sp),),
+              ),
+            );
           },
         );
       default:
