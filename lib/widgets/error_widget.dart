@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_project_structure/core/utils/app_colors.dart';
 import '../core/utils/local_strings.dart';
@@ -39,7 +38,7 @@ class ErrorWidgetItem extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
-                  AppLocale.somethingWentWrong.getString(context),
+                  'somethingWentWrong'.tr,
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w700,
@@ -48,7 +47,7 @@ class ErrorWidgetItem extends StatelessWidget {
                 ),
               ),
               Text(
-                AppLocale.pleaseTryAgain.getString(context),
+                'pleaseTryAgain'.tr,
                 style: TextStyle(
                   color: AppColors.black,
                   fontSize: 16.sp,
@@ -70,7 +69,7 @@ class ErrorWidgetItem extends StatelessWidget {
                   ),
                   onPressed: onTap,
                   child: Text(
-                    AppLocale.reloadScreen.getString(context),
+                    'reloadScreen'.tr,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: Colors.white,

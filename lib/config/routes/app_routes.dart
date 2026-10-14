@@ -15,7 +15,10 @@ class AppRoutes {
           builder: (context) {
             return Scaffold(
               body: Center(
-                child: Text(LocalStrings.noData , style: TextStyle(fontSize: 16.sp),),
+                child: Text(
+                  'noData'.tr,
+                  style: TextStyle(fontSize: 16.sp),
+                ),
               ),
             );
           },

@@ -19,17 +19,19 @@ void main() async {
   await Prefs.init();
   await di.init();
 
+  // Add this line, before init()
+  await FlutterLocalization.instance.ensureInitialized();
+
   FlutterLocalization.instance.init(
     mapLocales: [
-      const MapLocale('ar', AppLocale.AR, countryCode: 'AR'),
       const MapLocale('en', AppLocale.EN, countryCode: 'US'),
+      const MapLocale('ar', AppLocale.AR, countryCode: 'AR'),
     ],
-    initLanguageCode: 'ar',
+    initLanguageCode: 'en',
   );
 
-  // Initialize locale before running the app
   await Helper.getDefaultLanguage();
-  await initializeDateFormatting('ar', null);
+  await initializeDateFormatting('en', null);
   Bloc.observer = AppBlocObserver();
 
   runApp(

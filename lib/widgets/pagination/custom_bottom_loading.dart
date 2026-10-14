@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import '../../core/utils/app_colors.dart';
 import '../../core/utils/local_strings.dart';
 
@@ -33,7 +32,7 @@ class CustomBottomLoading extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              AppLocale.loadingMore.getString(context),
+              "loadingMore".tr,
               style: const TextStyle(color: AppColors.grey, fontSize: 12),
             ),
             SizedBox(height: bottomPadding),
@@ -48,7 +47,7 @@ class CustomBottomLoading extends StatelessWidget {
           children: [
             IconButton(onPressed: onReLoading, icon: const Icon(Icons.refresh)),
             Text(
-              AppLocale.refresh.getString(context),
+              "refresh".tr,
               style: const TextStyle(color: AppColors.grey, fontSize: 12),
             ),
           ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../config/theme/styles.dart';
 import '../core/utils/app_colors.dart';
@@ -17,7 +16,7 @@ class SkipWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Text(
-            AppLocale.skip.getString(context),
+            'skip'.tr,
             style: TextStyles.textMedium5.copyWith(
               color: AppColors.primaryColor,
             ),

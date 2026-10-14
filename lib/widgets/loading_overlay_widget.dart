@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_project_structure/config/theme/styles.dart';
 import '../core/utils/local_strings.dart';
@@ -35,14 +34,14 @@ class LoadingOverlayWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 20.h),
                 Text(
-                  AppLocale.loading.getString(context),
+                  'loading'.tr,
                   style: TextStyles.textMedium.copyWith(
                     color: Colors.grey[800],
                   ),
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  AppLocale.pleaseWait.getString(context),
+                  'pleaseWait'.tr,
                   style: TextStyles.textMedium4.copyWith(
                     color: Colors.grey[600],
                   ),

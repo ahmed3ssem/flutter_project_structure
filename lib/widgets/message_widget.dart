@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/utils/local_strings.dart';
 
@@ -13,11 +12,6 @@ class MessageWidget {
     VoidCallback onTap, {
     String? labelText,
   }) {
-    final context = scaffoldMessengerKey.currentContext;
-    final defaultOk = context != null
-        ? AppLocale.ok.getString(context)
-        : 'OK';
-
     final snackBar = SnackBar(
       content: Text(
         message,
@@ -29,7 +23,7 @@ class MessageWidget {
         textColor: Colors.white,
         label: (labelText != null && labelText.isNotEmpty)
             ? labelText
-            : defaultOk,
+            : 'ok'.tr,
         onPressed: onTap,
       ),
     );

@@ -1,10 +1,15 @@
 // ignore_for_file: implementation_imports
+import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_localization/src/localization/flutter_localization_translator.dart';
 
 extension StringTrExtension on String {
-  /// Translates a string key directly without requiring [BuildContext].
+  /// Translates a string key directly.
+  /// Usage: 'noData'.tr or AppLocale.noData.tr
   String get tr => FlutterLocalizationTranslator.instance.getStringOrKey(this);
+
+  /// Optional: Translates with [BuildContext] for reactive widget rebuilds on language change.
+  String trContext(BuildContext context) => getString(context);
 }
 
 class LocalStrings {
