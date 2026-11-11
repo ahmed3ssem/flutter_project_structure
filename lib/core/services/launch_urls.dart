@@ -1,65 +1,57 @@
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LaunchUrlsService {
-  void launchWhatsApp({
+  Future<bool> launchWhatsApp({
     required String phone,
-    required BuildContext context,
+    String? countryCode,
+    String? message,
   }) async {
-    String phoneNumber = phone.replaceAll('+', '');
-    if (phoneNumber.startsWith('0')) {
-      phoneNumber = phoneNumber.substring(1);
+    String sanitizedPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
+    if (countryCode != null && !sanitizedPhone.startsWith('+')) {
+      sanitizedPhone = '$countryCode$sanitizedPhone';
     }
-    String whatsappUrl = "https://wa.me/+966$phoneNumber";
-    Uri uri = Uri.parse(whatsappUrl);
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    sanitizedPhone = sanitizedPhone.replaceAll('+', '');
+
+    final encodedMessage = message != null ? '?text=${Uri.encodeComponent(message)}' : '';
+    final Uri uri = Uri.parse('https://wa.me/$sanitizedPhone$encodedMessage');
+    return _launch(uri, mode: LaunchMode.externalApplication);
   }
 
-  void launchCall({required String phone}) async {
-    Uri phoneNumber = Uri.parse('tel:$phone');
-    log(phoneNumber.toString());
-    await launchUrl(phoneNumber, mode: LaunchMode.externalApplication);
+  Future<bool> launchCall({required String phone}) async {
+    final Uri uri = Uri.parse('tel:$phone');
+    return _launch(uri);
   }
 
-  void launchEmail(String email, String subject) async {
-    final Uri emailLaunchUri = Uri(
+  Future<bool> launchEmail({
+    required String email,
+    String? subject,
+    String? body,
+  }) async {
+    final Uri uri = Uri(
       scheme: 'mailto',
       path: email,
-      queryParameters: {'subject': subject},
+      queryParameters: {
+        if (subject != null) 'subject': subject,
+        if (body != null) 'body': body,
+      },
     );
-
-    if (await canLaunchUrl(Uri.parse(emailLaunchUri.toString()))) {
-      await launchUrl(Uri.parse(emailLaunchUri.toString()));
-    } else {
-      log("Could not launch email to $email");
-    }
+    return _launch(uri);
   }
 
-  void launchFileDownload(
-    String url, {
+  Future<bool> launchBrowser({
+    required String url,
     LaunchMode mode = LaunchMode.externalApplication,
   }) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: mode);
-    } else {
-      throw 'Could not launch $url';
+    final Uri? uri = Uri.tryParse(url);
+    if (uri == null) {
+      log('Invalid URL: $url');
+      return false;
     }
+    return _launch(uri, mode: mode);
   }
 
-  Future<void> launchBrowser({
-    required String uri,
-    required BuildContext context,
-  }) async {
-    Uri url = Uri.parse(uri);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Future<void> openMap(double latitude, double longitude) async {
+  Future<bool> openMap(double latitude, double longitude) async {
     final Uri googleMapsUrl = Uri.parse(
       'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
     );
@@ -68,11 +60,26 @@ class LaunchUrlsService {
     );
 
     if (await canLaunchUrl(googleMapsUrl)) {
-      await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+      return await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
     } else if (await canLaunchUrl(appleMapsUrl)) {
-      await launchUrl(appleMapsUrl, mode: LaunchMode.externalApplication);
+      return await launchUrl(appleMapsUrl, mode: LaunchMode.externalApplication);
     } else {
-      throw 'Could not launch map';
+      log('Could not launch maps application');
+      return false;
+    }
+  }
+
+  Future<bool> _launch(Uri uri, {LaunchMode mode = LaunchMode.platformDefault}) async {
+    try {
+      if (await canLaunchUrl(uri)) {
+        return await launchUrl(uri, mode: mode);
+      } else {
+        log('Could not launch $uri');
+        return false;
+      }
+    } catch (e) {
+      log('Error launching $uri: $e');
+      return false;
     }
   }
 }

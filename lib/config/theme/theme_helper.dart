@@ -9,31 +9,26 @@ class ThemeHelper {
   static bool isDarkMode(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark;
 
+  static ColorScheme colorScheme(BuildContext context) =>
+      Theme.of(context).colorScheme;
+
   static Color primaryColor(BuildContext context) =>
-      AppColors.primaryColor;
+      Theme.of(context).colorScheme.primary;
 
   static Color secondaryColor(BuildContext context) =>
-      AppColors.secondColor;
+      Theme.of(context).colorScheme.secondary;
 
   static Color backgroundColor(BuildContext context) =>
-      isDarkMode(context)
-          ? AppColors.darkBackground
-          : AppColors.lightBackground;
+      Theme.of(context).scaffoldBackgroundColor;
 
   static Color surfaceColor(BuildContext context) =>
-      isDarkMode(context)
-          ? AppColors.darkSurface
-          : AppColors.lightSurface;
+      Theme.of(context).colorScheme.surface;
 
   static Color cardColor(BuildContext context) =>
-      isDarkMode(context)
-          ? AppColors.darkCard
-          : AppColors.lightCard;
+      Theme.of(context).cardColor;
 
   static Color borderColor(BuildContext context) =>
-      isDarkMode(context)
-          ? AppColors.darkBorder
-          : AppColors.lightBorder;
+      isDarkMode(context) ? AppColors.darkBorder : AppColors.lightBorder;
 
   static Color textPrimaryColor(BuildContext context) =>
       isDarkMode(context)
@@ -46,31 +41,15 @@ class ThemeHelper {
           : AppColors.lightTextSecondary;
 
   static Color errorColor(BuildContext context) =>
-      isDarkMode(context)
-          ? AppColors.darkError
-          : AppColors.lightError;
+      Theme.of(context).colorScheme.error;
 
-  // Success & Warning
-  static Color successColor(BuildContext context) =>
-      AppColors.green;
+  static Color successColor(BuildContext context) => AppColors.green;
+  static Color warningColor(BuildContext context) => AppColors.orange;
+  static Color whiteColor(BuildContext context) => AppColors.white;
+  static Color blackColor(BuildContext context) => AppColors.black;
+  static Color redColor(BuildContext context) => AppColors.red;
+  static Color hyperlinkColor(BuildContext context) => AppColors.hyperLink;
 
-  static Color warningColor(BuildContext context) =>
-      AppColors.orange;
-
-  // Common Colors
-  static Color whiteColor(BuildContext context) =>
-      AppColors.white;
-
-  static Color blackColor(BuildContext context) =>
-      AppColors.black;
-
-  static Color redColor(BuildContext context) =>
-      AppColors.red;
-
-  static Color hyperlinkColor(BuildContext context) =>
-      AppColors.hyperLink;
-
-  /// Toggle between light and dark mode
   static void toggleThemeMode(BuildContext context) {
     context.read<ThemeCubit>().toggleTheme();
   }

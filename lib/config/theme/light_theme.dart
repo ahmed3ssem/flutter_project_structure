@@ -8,20 +8,21 @@ class LightTheme {
   static final ThemeData theme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-
-    dividerColor: Colors.transparent,
-
+    dividerColor: AppColors.lightBorder,
     primaryColor: AppColors.primaryColor,
+    scaffoldBackgroundColor: AppColors.lightBackground,
+    cardColor: AppColors.lightCard,
 
     colorScheme: const ColorScheme.light(
       primary: AppColors.primaryColor,
       secondary: AppColors.secondColor,
       surface: AppColors.lightSurface,
       error: AppColors.lightError,
+      onPrimary: AppColors.white,
+      onSecondary: AppColors.white,
+      onSurface: AppColors.lightTextPrimary,
+      onError: AppColors.white,
     ),
-
-    scaffoldBackgroundColor: AppColors.lightBackground,
-    cardColor: AppColors.lightCard,
 
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.primaryColor,
@@ -34,68 +35,37 @@ class LightTheme {
       color: AppColors.lightCard,
       elevation: 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppConstance.radiusTiny),
-        side: const BorderSide(
-          color: AppColors.lightBorder,
-        ),
+        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        side: const BorderSide(color: AppColors.lightBorder),
       ),
     ),
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.lightSurface,
-
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.hPadding,
+        vertical: 14,
+      ),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstance.radiusTiny),
-        borderSide: const BorderSide(
-          color: AppColors.lightBorder,
-        ),
+        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        borderSide: const BorderSide(color: AppColors.lightBorder),
       ),
-
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstance.radiusTiny),
-        borderSide: const BorderSide(
-          color: AppColors.lightBorder,
-        ),
+        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        borderSide: const BorderSide(color: AppColors.lightBorder),
       ),
-
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstance.radiusTiny),
-        borderSide: const BorderSide(
-          color: AppColors.primaryColor,
-          width: 1.5,
-        ),
+        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        borderSide: const BorderSide(color: AppColors.primaryColor, width: 1.5),
       ),
-
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppConstance.radiusTiny),
-        borderSide: const BorderSide(
-          color: AppColors.lightError,
-        ),
+        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        borderSide: const BorderSide(color: AppColors.lightError),
       ),
-    ),
-
-    textTheme: const TextTheme(
-      titleLarge: TextStyle(
-        color: AppColors.lightTextPrimary,
-        fontWeight: FontWeight.bold,
-      ),
-      titleMedium: TextStyle(
-        color: AppColors.lightTextPrimary,
-        fontWeight: FontWeight.bold,
-      ),
-      titleSmall: TextStyle(
-        color: AppColors.lightTextPrimary,
-        fontWeight: FontWeight.w600,
-      ),
-      bodyLarge: TextStyle(
-        color: AppColors.lightTextPrimary,
-      ),
-      bodyMedium: TextStyle(
-        color: AppColors.lightTextPrimary,
-      ),
-      bodySmall: TextStyle(
-        color: AppColors.lightTextSecondary,
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppConstants.radiusSmall),
+        borderSide: const BorderSide(color: AppColors.lightError, width: 1.5),
       ),
     ),
 
@@ -103,14 +73,14 @@ class LightTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.white,
+        elevation: 0,
+        minimumSize: const Size(double.infinity, AppConstants.buttonHeight),
         padding: const EdgeInsets.symmetric(
-          vertical: AppConstance.vPadding,
+          vertical: AppConstants.vPadding,
           horizontal: 24,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            AppConstance.radiusTiny,
-          ),
+          borderRadius: BorderRadius.circular(AppConstants.radiusCircular),
         ),
       ),
     ),

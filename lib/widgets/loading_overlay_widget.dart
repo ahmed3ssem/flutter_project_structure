@@ -1,56 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_project_structure/config/theme/styles.dart';
+import '../core/utils/app_colors.dart';
 import '../core/utils/local_strings.dart';
+import 'loading_item.dart';
 
 class LoadingOverlayWidget extends StatelessWidget {
-  const LoadingOverlayWidget({super.key});
+  final String? message;
+  final bool isModal;
+
+  const LoadingOverlayWidget({
+    super.key,
+    this.message,
+    this.isModal = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final content = Center(
       child: Container(
-        color: Colors.black.withOpacity(0.5),
-        child: Center(
-          child: Container(
-            padding: EdgeInsets.all(30.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                ),
-              ],
+        padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 24.h),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkCard : AppColors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 16,
+              spreadRadius: 2,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                  strokeWidth: 3.0,
-                ),
-                SizedBox(height: 20.h),
-                Text(
-                  'loading'.tr,
-                  style: TextStyles.textMedium.copyWith(
-                    color: Colors.grey[800],
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Text(
-                  'pleaseWait'.tr,
-                  style: TextStyles.textMedium4.copyWith(
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const LoadingItem(size: 40),
+            SizedBox(height: 16.h),
+            Text(
+              message ?? 'pleaseWait'.tr,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
-          ),
+          ],
         ),
       ),
+    );
+
+    if (!isModal) return content;
+
+    return Container(
+      color: Colors.black.withOpacity(0.4),
+      width: double.infinity,
+      height: double.infinity,
+      child: content,
     );
   }
 }

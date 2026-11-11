@@ -1,70 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_project_structure/core/utils/app_colors.dart';
+import '../core/utils/app_colors.dart';
 import '../core/utils/local_strings.dart';
 
 class ErrorWidgetItem extends StatelessWidget {
   final VoidCallback onTap;
-  const ErrorWidgetItem({super.key, required this.onTap});
+  final String? errorMessage;
+  final bool showBackButton;
+
+  const ErrorWidgetItem({
+    super.key,
+    required this.onTap,
+    this.errorMessage,
+    this.showBackButton = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // align back icon to start
-      children: [
-        // 🔹 Back button
-        Container(
-          margin: EdgeInsetsDirectional.only(top: 20.h),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.secondColor),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
-        const SizedBox(height: 20), // spacing after back icon
-        // 🔹 Main content centered
-        Expanded(
+    return SafeArea(
+      child: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
-                child: Icon(
-                  Icons.warning_amber_rounded,
-                  size: 100.r,
-                  color: AppColors.secondColor,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(
-                  'somethingWentWrong'.tr,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18.sp,
+              if (showBackButton && Navigator.of(context).canPop())
+                Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: AppColors.secondColor),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
                 ),
+              SizedBox(height: 20.h),
+              Icon(
+                Icons.warning_amber_rounded,
+                size: 80.r,
+                color: AppColors.secondColor,
               ),
+              SizedBox(height: 16.h),
               Text(
-                'pleaseTryAgain'.tr,
+                'somethingWentWrong'.tr,
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: AppColors.black,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18.sp,
                 ),
               ),
-              Container(
-                width: MediaQuery.sizeOf(context).width * 0.55,
-                height: 55.h,
-                margin: const EdgeInsets.symmetric(vertical: 15),
+              SizedBox(height: 8.h),
+              Text(
+                errorMessage ?? 'pleaseTryAgain'.tr,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: 24.h),
+              SizedBox(
+                width: 200.w,
+                height: 48.h,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.secondColor,
-                    foregroundColor: Theme.of(context).primaryColor,
-                    elevation: 500,
+                    foregroundColor: AppColors.white,
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(24.r),
                     ),
                   ),
                   onPressed: onTap,
@@ -72,8 +80,7 @@ class ErrorWidgetItem extends StatelessWidget {
                     'reloadScreen'.tr,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      fontSize: 20.sp,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ),
@@ -81,7 +88,7 @@ class ErrorWidgetItem extends StatelessWidget {
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

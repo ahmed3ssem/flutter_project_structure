@@ -39,27 +39,33 @@ class _MyAppState extends State<MyApp> {
           designSize: const Size(375, 812),
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (_, child) {
-            return MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(
-                textScaler: const TextScaler.linear(1.0),
-              ),
-              child: MaterialApp(
-                navigatorKey: navigatorKey,
-                supportedLocales: _localization.supportedLocales,
-                localizationsDelegates: _localization.localizationsDelegates,
+          builder: (context, child) {
+            return MaterialApp(
+              navigatorKey: navigatorKey,
+              supportedLocales: _localization.supportedLocales,
+              localizationsDelegates: _localization.localizationsDelegates,
 
-                theme: LightTheme.theme,
-                darkTheme: DarkTheme.theme,
-                themeMode: themeMode,
+              theme: LightTheme.theme,
+              darkTheme: DarkTheme.theme,
+              themeMode: themeMode,
 
-                debugShowCheckedModeBanner: false,
-                title: AppStrings.appName,
-                onGenerateRoute: AppRoutes.onGenerateRoute,
-                scaffoldMessengerKey: MessageWidget.scaffoldMessengerKey,
-              ),
+              debugShowCheckedModeBanner: false,
+              title: AppStrings.appName,
+              onGenerateRoute: AppRoutes.onGenerateRoute,
+              scaffoldMessengerKey: MessageWidget.scaffoldMessengerKey,
+              builder: (context, widget) {
+                // Allows gentle accessibility scaling while preventing severe layout breaks
+                final mediaQuery = MediaQuery.of(context);
+                return MediaQuery(
+                  data: mediaQuery.copyWith(
+                    textScaler: mediaQuery.textScaler.clamp(
+                      minScaleFactor: 0.85,
+                      maxScaleFactor: 1.25,
+                    ),
+                  ),
+                  child: widget ?? const SizedBox.shrink(),
+                );
+              },
             );
           },
         );

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import '../preferences/flutter_secure_storage.dart';
 import '../../config/PrefHelper/prefs.dart';
 import '../utils/app_strings.dart';
 
@@ -9,36 +10,62 @@ class AppInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    debugPrint('REQUEST[${options.method}] => PATH: ${options.path}');
-    Map<String, dynamic> headers = {};
-    headers = getHeaders();
-    options.headers = headers;
+    if (kDebugMode) {
+      debugPrint('➡️ REQUEST[${options.method}] => PATH: ${options.path}');
+    }
+
+    final headers = await _getHeaders();
+    options.headers.addAll(headers);
+
     super.onRequest(options, handler);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    debugPrint(
-      'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
-    );
+    if (kDebugMode) {
+      debugPrint(
+        '⬅️ RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}',
+      );
+    }
     super.onResponse(response, handler);
   }
 
   @override
-  Future onError(DioException err, ErrorInterceptorHandler handler) async {
-    debugPrint(
-      'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}',
-    );
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    if (kDebugMode) {
+      debugPrint(
+        '❌ ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path} | MESSAGE: ${err.message}',
+      );
+    }
+
+    // Global session expiration hook (HTTP 401)
+    if (err.response?.statusCode == 401) {
+      // Can dispatch logout event or clear token if appropriate
+    }
+
     super.onError(err, handler);
   }
 
-  Map<String, dynamic> getHeaders() {
-    String token = '';
-    Map<String, dynamic> header = {};
-    if (Prefs.isContain(AppStrings.token)) {
+  Future<Map<String, dynamic>> _getHeaders() async {
+    final Map<String, dynamic> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Accept-Language': AppStrings.appLocal,
+    };
+
+    // Try reading token from secure storage first, fallback to Prefs for compatibility
+    String token = await MySecureStorage.getToken();
+    if (token.isEmpty && Prefs.isContain(AppStrings.token)) {
       token = Prefs.getString(AppStrings.token);
-      header = {'Authorization': 'Bearer $token'};
     }
-    return header;
+
+    if (token.isNotEmpty && token != 'null') {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    return headers;
   }
 }

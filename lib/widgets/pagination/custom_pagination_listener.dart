@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
-class CustomPaginationLister extends StatelessWidget {
+class CustomPaginationListener extends StatelessWidget {
   final Widget child;
   final VoidCallback onLoading;
-  final bool haveNext, isGetPreviousSuccess;
+  final bool haveNext;
+  final bool isGetPreviousSuccess;
+  final double threshold;
 
-  const CustomPaginationLister({
+  const CustomPaginationListener({
     super.key,
     required this.child,
     required this.onLoading,
     required this.haveNext,
     required this.isGetPreviousSuccess,
+    this.threshold = 100.0,
   });
 
   @override
@@ -18,14 +21,16 @@ class CustomPaginationLister extends StatelessWidget {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification sn) {
         if (haveNext &&
-            sn is ScrollUpdateNotification &&
-            sn.metrics.pixels >= sn.metrics.maxScrollExtent - 30 &&
-            isGetPreviousSuccess) {
+            isGetPreviousSuccess &&
+            sn.metrics.pixels >= (sn.metrics.maxScrollExtent - threshold)) {
           onLoading();
         }
-        return true;
+        return false;
       },
       child: child,
     );
   }
 }
+
+// Backwards compatibility alias for typo
+typedef CustomPaginationLister = CustomPaginationListener;

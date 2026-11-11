@@ -1,80 +1,65 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_project_structure/widgets/loading_item.dart';
-import 'package:flutter_project_structure/widgets/svg_image_widget.dart';
+import 'loading_item.dart';
 
-class ImageLoader extends StatefulWidget {
+class ImageLoader extends StatelessWidget {
   final String imageUrl;
   final double? height;
   final double? width;
-  final BoxFit? fit;
-  final BorderRadius? borderRadius; // New parameter
+  final BoxFit fit;
+  final BorderRadius? borderRadius;
+  final Widget? errorWidget;
+  final Widget? placeholder;
 
   const ImageLoader({
     super.key,
     required this.imageUrl,
     this.height,
     this.width,
-    this.fit,
+    this.fit = BoxFit.cover,
     this.borderRadius,
+    this.errorWidget,
+    this.placeholder,
   });
 
   @override
-  State<ImageLoader> createState() => ImageLoaderState();
-}
+  Widget build(BuildContext context) {
+    final effectiveHeight = height ?? 100.h;
+    final effectiveWidth = width ?? 100.w;
 
-class ImageLoaderState extends State<ImageLoader>
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  Animation<double>? animation;
-
-  @override
-  initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 10),
-      vsync: this,
-    )..repeat(reverse: true);
-    animation = CurvedAnimation(parent: _controller, curve: Curves.linear);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Widget loadDefault() {
     return ClipRRect(
-      borderRadius:
-          widget.borderRadius ?? BorderRadius.zero, // Apply borderRadius here
-      child: CachedNetworkImage(
-        imageUrl: widget.imageUrl,
-        height: widget.height ?? ScreenUtil().setHeight(100),
-        width: widget.width ?? ScreenUtil().setWidth(100),
-        fit: widget.fit ?? BoxFit.contain,
-        placeholder: (context, url) => const LoadingItem(),
-        errorWidget: (context, url, error) => Container(
-          padding: const EdgeInsets.all(4),
-          child: SVGImageWidget(
-            image: "",
-            width: widget.width ?? ScreenUtil().setWidth(100),
-            height: widget.height ?? ScreenUtil().setHeight(100),
-          ),
-        ),
-      ),
+      borderRadius: borderRadius ?? BorderRadius.zero,
+      child: imageUrl.isEmpty
+          ? _buildErrorWidget(effectiveWidth, effectiveHeight)
+          : CachedNetworkImage(
+              imageUrl: imageUrl,
+              height: effectiveHeight,
+              width: effectiveWidth,
+              fit: fit,
+              placeholder: (context, url) =>
+                  placeholder ??
+                  Center(
+                    child: LoadingItem(
+                      size: (effectiveHeight > 40 ? 30.r : effectiveHeight * 0.5),
+                    ),
+                  ),
+              errorWidget: (context, url, error) =>
+                  errorWidget ?? _buildErrorWidget(effectiveWidth, effectiveHeight),
+            ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildErrorWidget(double w, double h) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius:
-            widget.borderRadius ?? BorderRadius.zero, // Apply borderRadius here
+      width: w,
+      height: h,
+      color: Colors.grey.withOpacity(0.1),
+      child: Icon(
+        Icons.image_not_supported_outlined,
+        size: (h > 40 ? 28.r : h * 0.6),
+        color: Colors.grey,
       ),
-      child: loadDefault(),
     );
   }
 }

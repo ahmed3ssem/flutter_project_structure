@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_project_structure/config/theme/theme_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'config/theme/theme_cubit.dart';
 import 'core/api/api_consumer.dart';
 import 'core/api/app_interceptor.dart';
 import 'core/api/dio_consumer.dart';
@@ -15,29 +15,26 @@ import 'core/services/share_service.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  //Blocs
-  //sl.registerFactory(() => SignUpCubit(signUpUseCase: sl() , socialLoginUseCase: sl()));
+  // Features (Blocs, UseCases, Repositories, DataSources)
+  // Register feature dependencies here as your app grows:
+  // sl.registerFactory(() => AuthCubit(loginUseCase: sl()));
 
-  //Repository
-  //sl.registerLazySingleton<SignUpRepository>(() => SignUpRepositoryImpl(signUpRemoteDataSource: sl(), networkInfo: sl()));
-
-  //Data Sources
-  //sl.registerLazySingleton<SignUpRemoteDataSource>(() => SignUpRemoteDataSourceImpl(consumer: sl()));
-
-  //Core
+  // Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton<ApiConsumer>(() => DioConsumer(client: sl()));
 
-  //Services
-  sl.registerLazySingleton<MySecureStorage>(() => MySecureStorage());
+  // Services
+  sl.registerLazySingleton<MySecureStorage>(() => const MySecureStorage());
   sl.registerLazySingleton<LaunchUrlsService>(() => LaunchUrlsService());
   sl.registerLazySingleton<ShareService>(() => ShareService());
 
-  //External
+  // External & Infrastructure
   final sharedPreference = await SharedPreferences.getInstance();
-  sl.registerLazySingleton(() => sharedPreference);
-  sl.registerLazySingleton(() => InternetConnectionChecker.createInstance());
-  sl.registerLazySingleton(() => AppInterceptor());
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPreference);
+  sl.registerLazySingleton<InternetConnectionChecker>(
+    () => InternetConnectionChecker.createInstance(),
+  );
+  sl.registerLazySingleton<AppInterceptor>(() => AppInterceptor());
   sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
-  sl.registerLazySingleton(() => Dio());
+  sl.registerLazySingleton<Dio>(() => Dio());
 }
